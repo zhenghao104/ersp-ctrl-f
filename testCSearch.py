@@ -1,11 +1,13 @@
 import boto3
 import cv2
+import sys
 
-BUCKET="ersp-test-1"
-KEY="output.jpg"
-NAMESELECT="Benedict Wong"
+BUCKET=sys.argv[1]
+KEY=sys.argv[3]
+NAMESELECT=sys.argv[2]
+outputname=sys.argv[4]
 
-img = cv2.imread('output.jpg')
+img = cv2.imread(KEY)
 FEATURES_CHOOSELIST= ("Face")
 propertics = img.shape
 
@@ -27,7 +29,6 @@ def recognize_celebrities(bucket,key, region="us-east-2"):
 
 for face in recognize_celebrities(BUCKET,KEY):
 
-	#print "{Name}".format(**face)
 	
 	namecheck = "{Name}".format(**face)
 
@@ -57,8 +58,8 @@ for face in recognize_celebrities(BUCKET,KEY):
                                 x1 = int(xTop+borderLength)
                                 y1 = int(yLeft+borderWidth)
 				
-				print namecheck				
+				print namecheck	#Only print if it is working				
 
                                 img = cv2.rectangle(img, (x,y), (x1,y1),(0,255,0),3)
-                                cv2.imwrite("resultoutput.jpg",img)	
+                                cv2.imwrite(outputname,img)	
 
