@@ -21,24 +21,28 @@ width=float(propertics[1])
 FEATURES_CHOOSELIST = ("BoundingBox")
 
 textfileName = "result.txt"
-sys.out = open(textfileName,'w')
+sys.stdout = open(textfileName,'w')
 
-def detect_faces (bucket,key, attributes=['ALL'], region="us-east-2"):
+def recognize_celebrities (bucket,key, attributes=['ALL'], region="us-east-2"):
 	rekognition = boto3.client("rekognition",region)
-	response = rekognition.detect_faces(
+	response = rekognition.recognize_celebrities(
 		Image={
 			"S3Object": {
 				"Bucket": bucket,
 				"Name": key,
 			}
 		},
-	Attributes=attributes
+	#Attributes=attributes
 	)
-	return response['FaceDetails']
+	return response['CelebrityFaces']
+	#return response['FaceDetails']
 
-for face in detect_faces(BUCKET,KEY):
 
-	#print "{Name}".format(**face)
+print	KEY.strip(".jpg")
+
+for face in recognize_celebrities(BUCKET,KEY):
+
+	print "{Name}".format(**face)
 
 	for feature, data in face.iteritems():
 			if feature in FEATURES_CHOOSELIST:
@@ -72,5 +76,7 @@ for face in detect_faces(BUCKET,KEY):
 
 				img = cv2.rectangle(img, (x,y), (x1,y1),(0,255,0),3)
 				cv2.imwrite(KEY,img)
+
+print("\n")
 
 
