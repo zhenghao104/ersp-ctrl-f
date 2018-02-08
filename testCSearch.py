@@ -1,9 +1,13 @@
 import boto3
 import cv2
 import sys
+import subprocess
+from subprocess import call
 
 BUCKET=sys.argv[1]
+print(BUCKET)
 KEY=sys.argv[3]
+print(KEY)
 NAMESELECT=sys.argv[2]
 outputname=sys.argv[4]
 
@@ -24,7 +28,7 @@ def recognize_celebrities(bucket,key, region="us-east-2"):
                         }
                 }
 	)
-
+	print('returning response')
 	return response['CelebrityFaces']
 
 for face in recognize_celebrities(BUCKET,KEY):

@@ -1,16 +1,27 @@
 import boto3
 import cv2
+import sys
+import subprocess
+from subprocess import call
+import awscli
 
 BUCKET="ersp-test-1"
-KEY="output.jpg"
+KEY=sys.argv[1]
 
-img = cv2.imread('output.jpg')
+
+s3 = boto3.resource('s3')
+s3.meta.client.upload_file(KEY, BUCKET, KEY)
+
+img = cv2.imread(KEY)
 propertics = img.shape
 
 height=float(propertics[0])
 width=float(propertics[1])
 
 FEATURES_CHOOSELIST = ("BoundingBox")
+
+textfileName = "result.txt"
+sys.out = open(textfileName,'w')
 
 def detect_faces (bucket,key, attributes=['ALL'], region="us-east-2"):
 	rekognition = boto3.client("rekognition",region)
@@ -26,6 +37,8 @@ def detect_faces (bucket,key, attributes=['ALL'], region="us-east-2"):
 	return response['FaceDetails']
 
 for face in detect_faces(BUCKET,KEY):
+
+	#print "{Name}".format(**face)
 
 	for feature, data in face.iteritems():
 			if feature in FEATURES_CHOOSELIST:
@@ -58,6 +71,6 @@ for face in detect_faces(BUCKET,KEY):
 				y1 = int(yLeft+borderWidth)
 
 				img = cv2.rectangle(img, (x,y), (x1,y1),(0,255,0),3)
-				cv2.imwrite("resultoutput.jpg",img)
+				cv2.imwrite(KEY,img)
 
 

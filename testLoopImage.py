@@ -5,9 +5,9 @@ import sys
 import subprocess
 from subprocess import call
 
-foldercheck=sys.argv[1]	#Folder of images to loop through
-folderpath = foldercheck + "/"
-for filename in os.listdir(foldercheck): 
+#foldercheck=sys.argv[1]	#Folder of images to loop through
+#folderpath = './' + foldercheck + "/"
+#newfolderpath = "./processed_images/"
+for filename in os.listdir("."):
 	if filename.endswith(".jpg"):
-		newfilename = "new_" + filename
-		#call(["python testCSearch.py ersp-test-1 'Benedict Wong'", folderpath+filename, folderpath+newfilename])
+		call(["python", "testCSearch.py", "ersp-test-1", '"Benedict Wong"', filename, filename])
